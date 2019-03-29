@@ -128,7 +128,31 @@ def frag_friend_slot():
 # def frag_song():
 
 
-# def frag_stamina():
+def frag_stamina():
+    '''
+    attention:
+        be aware of getting banned for frequent/excessive use of this api
+    usage:
+        run directly to get you 6 stamina (if possible) without costing your fragments
+    return:
+        {
+            "success": true,
+            "value": {
+                "user_id": *,
+                "stamina": *,
+                "max_stamina_ts": *,
+                "next_fragstam_ts": *
+            }
+        }
+    '''
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    stamina_url = 'https://arcapi.lowiro.com/5/purchase/me/stamina/fragment'
+    stamina_response = requests.post(stamina_url, headers=headers)
+    stamina_json = json.loads(stamina_response.content)
+    print (json.dumps(stamina_json, indent=4))
+
+    return (stamina_json)
 
 
 def get_character_info():
