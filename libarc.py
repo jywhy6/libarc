@@ -273,7 +273,7 @@ def get_world_map():
     return (get_world_map_json)
 
 
-def get_map_token(song_id, difficulty, select_session_uuid):
+def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply = 0, fragment_multiply = 0):
     '''
     attention:
         you must be in a map before getting token from map
@@ -281,9 +281,11 @@ def get_map_token(song_id, difficulty, select_session_uuid):
     usage:
         song_id: please check song_id.json
         difficulty: 0=pst, 1=prs, 2=ftr
+        stamina_multiply: (not used (0) by default) available in legacy maps, 2=2x, 4=4x, 6=6x
+        fragment_multiply: (not used (0) by default) available in legacy maps, 100=1.0x, 110=1.1x, 125=1.25x, 150=1.5x
         select_session_uuid: a uuid
     example:
-        get_map_token('fairytale', 0, str(uuid.uuid4()).upper())
+        get_map_token('fairytale', 0, str(uuid.uuid4()).upper(), 4, 150)
     return:
         {
             "success": true,
@@ -300,6 +302,11 @@ def get_map_token(song_id, difficulty, select_session_uuid):
         'difficulty': difficulty,
         'select_session': select_session_uuid,
     }
+    if (stamina_multiply):
+        map_token_params['stamina_multiply'] = stamina_multiply
+    if (fragment_multiply):
+        map_token_params['fragment_multiply'] = fragment_multiply
+    print(map_token_params)
     if (auth_str and ('Authorization' not in headers)):
         headers['Authorization'] = auth_str
     map_token_url = 'https://arcapi.lowiro.com/5/score/token/world'
