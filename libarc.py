@@ -273,6 +273,44 @@ def get_world_map():
     return (get_world_map_json)
 
 
+def get_map_token(song_id, difficulty, select_session_uuid):
+    '''
+    attention:
+        you must be in a map before getting token from map
+        this function will cost you (at least 1/2 by default) stamina
+    usage:
+        song_id: please check song_id.json
+        difficulty: 0=pst, 1=prs, 2=ftr
+        select_session_uuid: a uuid
+    example:
+        get_map_token('fairytale', 0, str(uuid.uuid4()).upper())
+    return:
+        {
+            "success": true,
+            "value": {
+                "stamina": 5,
+                "max_stamina_ts": 1553877288261,
+                "token": "rn2hBgdKJL20UO8ZYBuixi2kZva7FmS4mcSlTz3Eks8="
+            }
+        }
+    '''
+
+    map_token_params = {
+        'song_id': song_id,
+        'difficulty': difficulty,
+        'select_session': select_session_uuid,
+    }
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    map_token_url = 'https://arcapi.lowiro.com/5/score/token/world'
+
+    map_token_response = requests.get(map_token_url, headers=headers, params=map_token_params)
+    map_token_json = json.loads(map_token_response.content)
+    print (json.dumps(map_token_json, indent=4))
+
+    return (map_token_json)
+
+
 def rank_friend(song_id, difficulty, start, limit):
     '''
     usage:
@@ -413,6 +451,36 @@ def set_character(character, skill_sealed=False):
     print(json.dumps(set_character_json, indent=4))
 
     return (set_character_json)
+
+
+def set_map(map_id):
+    '''
+    usage:
+        map_id: please refer to map.json to find your map_id
+    example:
+        set_map('hikari_art')
+    return:
+        {
+            "success": true,
+            "value": {
+                "user_id": 1506141,
+                "curr_position": 0,
+                "curr_capture": 0,
+                "is_locked": false,
+                "map_id": "hikari_art"
+            }
+        }
+    '''
+    set_map_data = {'map_id': map_id}
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    set_map_url = 'https://arcapi.lowiro.com/5/world/map/me/'
+    #
+    set_map_response = requests.post(set_map_url, headers=headers, data=set_map_data)
+    set_map_json = json.loads(set_map_response.content)
+    print (json.dumps(set_map_json, indent=4))
+
+    return (set_map_json)
 
 
 def user_info():
