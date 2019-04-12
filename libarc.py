@@ -23,6 +23,10 @@ print('static_uuid: ' + static_uuid)
 print('auth_str: ' + auth_str)
 
 
+def calc_score(shiny_perfect_count, perfect_count, near_count, miss_count):
+    return int(10000000 / (perfect_count + near_count + miss_count) * (perfect_count + 0.5 * near_count) + shiny_perfect_count)
+
+
 def char_upgrade(character):
     '''
     usage:
@@ -172,9 +176,6 @@ def frag_friend_slot():
     print(json.dumps(friend_slot_json, indent=4))
 
     return (friend_slot_json)
-
-
-# def frag_song():
 
 
 def frag_stamina():
@@ -368,6 +369,45 @@ def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply=0, 
     print(json.dumps(map_token_json, indent=4))
 
     return (map_token_json)
+
+
+def post_score(song_token, song_hash, song_id, difficulty, score, shiny_perfect_count, perfect_count, near_count, miss_count, health, modifier, submission_hash):
+    '''
+    usage:
+        song_token: get it from get_map_token() or get_score_token()
+        song_hash: the song hash, the MD5 hex digest of aff file
+        song_id: please check song_id.json
+        difficulty: 0=pst, 1=prs, 2=ftr
+        score: the total score
+        submission_hash: the submission hash
+    example:
+        post_score(song_token, song_hash, 'rise', 2, calc_score(...), 724, 776, 3, 9, 100, 0, submission_hash)
+    return:
+    '''
+
+    post_score_data = {
+        'song_token': song_token,
+        'song_hash': song_hash,
+        'song_id': song_id,
+        'difficulty': difficulty,
+        'score': score,
+        'shiny_perfect_count': shiny_perfect_count,
+        'perfect_count': perfect_count,
+        'near_count': near_count,
+        'miss_count': miss_count,
+        'health': health,
+        'modifier': modifier,
+        'submission_hash': submission_hash
+    }
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    post_score_url = 'https://arcapi.lowiro.com/5/score/song'
+
+    post_score_response = requests.post(post_score_url, headers=headers, data=post_score_data)
+    post_score_json = json.loads(post_score_response.content)
+    print(json.dumps(post_score_json, indent=4))
+
+    return (post_score_json)
 
 
 def rank_friend(song_id, difficulty, start, limit):
@@ -624,7 +664,7 @@ def user_login(name, password, add_auth=True, change_device_id=False):
 def user_register(name, password, email, add_auth=True, platform='ios', change_device_id=True):
     '''
     usage:
-        name: username
+        name: username (maximum length: 15)
         password: password
         email: email address
         add_auth: whether to use the (new) authorization code for following functions
