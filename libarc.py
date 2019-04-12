@@ -19,8 +19,56 @@ static_uuid = '41EA0069-AED7-4902-BF82-1E03793146A7'
 auth_str = ''
 headers['Authorization'] = auth_str
 
-print ('static_uuid: ' + static_uuid)
-print ('auth_str: ' + auth_str)
+print('static_uuid: ' + static_uuid)
+print('auth_str: ' + auth_str)
+
+
+def char_upgrade(character):
+    '''
+    usage:
+        character: character id, from 1 to ?
+        to upgrade the chosen character using ether drops
+    return:
+        {
+            "success": false,
+            "error_code": 302
+        }
+    '''
+
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    char_upgrade_url = 'https://arcapi.lowiro.com/5/user/me/character/' + \
+        str(character) + '/exp'
+
+    char_upgrade_response = requests.post(char_upgrade_url, headers=headers)
+    char_upgrade_json = json.loads(char_upgrade_response.content)
+    print(json.dumps(char_upgrade_json, indent=4))
+
+    return (char_upgrade_json)
+
+
+def char_awaken(character):
+    '''
+    usage:
+        character: character id, from 1 to ?
+        to upgrade the chosen character using desolate core and hollow core
+    return:
+        {
+            "success": false,
+            "error_code": 306
+        }
+    '''
+
+    if (auth_str and ('Authorization' not in headers)):
+        headers['Authorization'] = auth_str
+    char_awaken_url = 'https://arcapi.lowiro.com/5/user/me/character/' + \
+        str(character) + '/uncap'
+
+    char_awaken_response = requests.post(char_awaken_url, headers=headers)
+    char_awaken_json = json.loads(char_awaken_response.content)
+    print(json.dumps(char_awaken_json, indent=4))
+
+    return (char_awaken_json)
 
 
 def friend_add(friend_code):
@@ -74,10 +122,10 @@ def friend_add(friend_code):
         headers['Authorization'] = auth_str
     friend_add_url = 'https://arcapi.lowiro.com/5/friend/me/add'
     #
-    friend_add_response = requests.post(friend_add_url, headers=headers, data=friend_add_data)
+    friend_add_response = requests.post(
+        friend_add_url, headers=headers, data=friend_add_data)
     friend_add_json = json.loads(friend_add_response.content)
-    print (json.dumps(friend_add_json, indent=4))
-
+    print(json.dumps(friend_add_json, indent=4))
 
     return (friend_add_json)
 
@@ -101,9 +149,10 @@ def friend_del(friend_id):
         headers['Authorization'] = auth_str
     friend_del_url = 'https://arcapi.lowiro.com/5/friend/me/delete'
 
-    friend_del_response = requests.post(friend_del_url, headers=headers, data=friend_del_data)
+    friend_del_response = requests.post(
+        friend_del_url, headers=headers, data=friend_del_data)
     friend_del_json = json.loads(friend_del_response.content)
-    print (json.dumps(friend_del_json, indent=4))
+    print(json.dumps(friend_del_json, indent=4))
 
     return (friend_del_json)
 
@@ -120,7 +169,7 @@ def frag_friend_slot():
     friend_slot_url = 'https://arcapi.lowiro.com/5/purchase/me/friend/fragment'
     friend_slot_response = requests.post(friend_slot_url, headers=headers)
     friend_slot_json = json.loads(friend_slot_response.content)
-    print (json.dumps(friend_slot_json, indent=4))
+    print(json.dumps(friend_slot_json, indent=4))
 
     return (friend_slot_json)
 
@@ -150,7 +199,7 @@ def frag_stamina():
     stamina_url = 'https://arcapi.lowiro.com/5/purchase/me/stamina/fragment'
     stamina_response = requests.post(stamina_url, headers=headers)
     stamina_json = json.loads(stamina_response.content)
-    print (json.dumps(stamina_json, indent=4))
+    print(json.dumps(stamina_json, indent=4))
 
     return (stamina_json)
 
@@ -222,7 +271,8 @@ def get_character_info():
         headers['Authorization'] = auth_str
     get_character_info_url = 'https://arcapi.lowiro.com/5/user/me/character'
 
-    get_character_info_response = requests.get(get_character_info_url, headers=headers)
+    get_character_info_response = requests.get(
+        get_character_info_url, headers=headers)
     get_character_info_json = json.loads(get_character_info_response.content)
     print(json.dumps(get_character_info_json, indent=4))
 
@@ -247,7 +297,8 @@ def get_score_token():
         headers['Authorization'] = auth_str
     get_score_token_url = 'https://arcapi.lowiro.com/5/score/token'
 
-    get_score_token_response = requests.get(get_score_token_url, headers=headers)
+    get_score_token_response = requests.get(
+        get_score_token_url, headers=headers)
     get_score_token_json = json.loads(get_score_token_response.content)
     print(json.dumps(get_score_token_json, indent=4))
 
@@ -273,7 +324,7 @@ def get_world_map():
     return (get_world_map_json)
 
 
-def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply = 0, fragment_multiply = 0):
+def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply=0, fragment_multiply=0):
     '''
     attention:
         you must be in a map before getting token from map
@@ -311,9 +362,10 @@ def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply = 0
         headers['Authorization'] = auth_str
     map_token_url = 'https://arcapi.lowiro.com/5/score/token/world'
 
-    map_token_response = requests.get(map_token_url, headers=headers, params=map_token_params)
+    map_token_response = requests.get(
+        map_token_url, headers=headers, params=map_token_params)
     map_token_json = json.loads(map_token_response.content)
-    print (json.dumps(map_token_json, indent=4))
+    print(json.dumps(map_token_json, indent=4))
 
     return (map_token_json)
 
@@ -339,9 +391,10 @@ def rank_friend(song_id, difficulty, start, limit):
         headers['Authorization'] = auth_str
     rank_friend_url = 'https://arcapi.lowiro.com/5/score/song/friend'
 
-    rank_friend_response = requests.get(rank_friend_url, headers=headers, params=rank_friend_params)
+    rank_friend_response = requests.get(
+        rank_friend_url, headers=headers, params=rank_friend_params)
     rank_friend_json = json.loads(rank_friend_response.content)
-    print (json.dumps(rank_friend_json, indent=4))
+    print(json.dumps(rank_friend_json, indent=4))
 
     return (rank_friend_json)
 
@@ -368,9 +421,10 @@ def rank_me(song_id, difficulty, start, limit):
         headers['Authorization'] = auth_str
     rank_me_url = 'https://arcapi.lowiro.com/5/score/song/me'
 
-    rank_me_response = requests.get(rank_me_url, headers=headers, params=rank_me_params)
+    rank_me_response = requests.get(
+        rank_me_url, headers=headers, params=rank_me_params)
     rank_me_json = json.loads(rank_me_response.content)
-    print (json.dumps(rank_me_json, indent=4))
+    print(json.dumps(rank_me_json, indent=4))
 
     return (rank_me_json)
 
@@ -421,9 +475,10 @@ def rank_world(song_id, difficulty, start, limit):
         headers['Authorization'] = auth_str
     rank_world_url = 'https://arcapi.lowiro.com/5/score/song'
 
-    rank_world_response = requests.get(rank_world_url, headers=headers, params=rank_world_params)
+    rank_world_response = requests.get(
+        rank_world_url, headers=headers, params=rank_world_params)
     rank_world_json = json.loads(rank_world_response.content)
-    print (json.dumps(rank_world_json, indent=4))
+    print(json.dumps(rank_world_json, indent=4))
 
     return (rank_world_json)
 
@@ -453,7 +508,8 @@ def set_character(character, skill_sealed=False):
         headers['Authorization'] = auth_str
     set_character_url = 'https://arcapi.lowiro.com/5/user/me/character'
 
-    set_character_response = requests.post(set_character_url, headers=headers, data=set_character_data)
+    set_character_response = requests.post(
+        set_character_url, headers=headers, data=set_character_data)
     set_character_json = json.loads(set_character_response.content)
     print(json.dumps(set_character_json, indent=4))
 
@@ -483,9 +539,10 @@ def set_map(map_id):
         headers['Authorization'] = auth_str
     set_map_url = 'https://arcapi.lowiro.com/5/world/map/me/'
     #
-    set_map_response = requests.post(set_map_url, headers=headers, data=set_map_data)
+    set_map_response = requests.post(
+        set_map_url, headers=headers, data=set_map_data)
     set_map_json = json.loads(set_map_response.content)
-    print (json.dumps(set_map_json, indent=4))
+    print(json.dumps(set_map_json, indent=4))
 
     return (set_map_json)
 
@@ -501,24 +558,25 @@ def user_info():
         headers['Authorization'] = auth_str
     user_info_params = {}
     call_list = [
-                    {
-                        "endpoint": "user/me",
+        {
+            "endpoint": "user/me",
                         "id": 0
-                    },
-                    {
-                        "endpoint": "purchase/bundle/pack",
+        },
+        {
+            "endpoint": "purchase/bundle/pack",
                         "id": 1
-                    },
-                    {
-                        "endpoint": "serve/download/me/song?url=false",
+        },
+        {
+            "endpoint": "serve/download/me/song?url=false",
                         "id": 2
-                    }
-                ]
+        }
+    ]
     user_info_params['calls'] = json.dumps(call_list)
     user_info_url = 'https://arcapi.lowiro.com/5/compose/aggregate'
-    user_info_response = requests.get(user_info_url, headers=headers, params=user_info_params)
+    user_info_response = requests.get(
+        user_info_url, headers=headers, params=user_info_params)
     user_info_json = json.loads(user_info_response.content)
-    print (json.dumps(user_info_json, indent=4))
+    print(json.dumps(user_info_json, indent=4))
 
     return (user_info_json)
 
@@ -541,18 +599,19 @@ def user_login(name, password, add_auth=True, change_device_id=False):
     if (change_device_id):
         headers['DeviceId'] = str(uuid.uuid4()).upper()
         static_uuid = headers['DeviceId']
-        print ('new_uuid: ' + static_uuid)
-    headers['Authorization'] = 'Basic ' + str(base64.b64encode((login_cred['name'] + ':' + login_cred['password']).encode('utf-8')), 'utf-8')
+        print('new_uuid: ' + static_uuid)
+    headers['Authorization'] = 'Basic ' + str(base64.b64encode(
+        (login_cred['name'] + ':' + login_cred['password']).encode('utf-8')), 'utf-8')
     login_url = 'https://arcapi.lowiro.com/5/auth/login'
 
     login_response = requests.post(login_url, headers=headers, data=login_data)
     login_json = json.loads(login_response.content)
-    print (json.dumps(login_json, indent=4))
-
+    print(json.dumps(login_json, indent=4))
 
     if (login_json['success']):
         if (add_auth):
-            headers['Authorization'] = login_json['token_type'] + ' ' + login_json['access_token']
+            headers['Authorization'] = login_json['token_type'] + \
+                ' ' + login_json['access_token']
             auth_str = headers['Authorization']
             print('new_auth: ' + auth_str)
         else:
@@ -585,28 +644,23 @@ def user_register(name, password, email, add_auth=True, platform='ios', change_d
     if (change_device_id):
         register_data['device_id'] = str(uuid.uuid4()).upper()
         static_uuid = register_data['device_id']
-        print ('new_uuid: ' + static_uuid)
+        print('new_uuid: ' + static_uuid)
     if ('Authorization' in headers):
         headers.pop('Authorization')
     register_url = 'https://arcapi.lowiro.com/5/user/'
 
-    register_response = requests.post(register_url, headers=headers, data=register_data)
+    register_response = requests.post(
+        register_url, headers=headers, data=register_data)
     register_json = json.loads(register_response.content)
-    print (json.dumps(register_json, indent=4))
-
+    print(json.dumps(register_json, indent=4))
 
     if (register_json['success']):
         if (add_auth):
-            headers['Authorization'] = 'Bearer ' + register_json['value']['access_token']
+            headers['Authorization'] = 'Bearer ' + \
+                register_json['value']['access_token']
             auth_str = headers['Authorization']
-            print ('new_auth: ' + auth_str)
+            print('new_auth: ' + auth_str)
         else:
             headers['Authorization'] = auth_str
 
     return (register_json)
-
-
-
-
-
-
