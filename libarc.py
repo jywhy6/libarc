@@ -403,7 +403,8 @@ def post_score(song_token, song_hash, song_id, difficulty, score, shiny_perfect_
         headers['Authorization'] = auth_str
     post_score_url = 'https://arcapi.lowiro.com/5/score/song'
 
-    post_score_response = requests.post(post_score_url, headers=headers, data=post_score_data)
+    post_score_response = requests.post(
+        post_score_url, headers=headers, data=post_score_data)
     post_score_json = json.loads(post_score_response.content)
     print(json.dumps(post_score_json, indent=4))
 
