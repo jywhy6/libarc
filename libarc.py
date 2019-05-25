@@ -8,13 +8,12 @@ headers = {
     'Accept': '*/*',
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     'Accept-Encoding': 'br, gzip, deflate',
-    'AppVersion': '2.0.1',
-    'Cookie': '',
-    'User-Agent': 'Arc-mobile/2.0.1.0 CFNetwork/976 Darwin/18.2.0'
+    'AppVersion': '2.1.0',
+    'User-Agent': 'Arc-mobile/2.1.0.0 CFNetwork/976 Darwin/18.2.0'
 }
 
 # generate uuid: str(uuid.uuid4()).upper()
-# generate auth: user_login() or user_register()
+# generate auth: user_login() or user_register() or get by network tools like Fiddler
 static_uuid = '41EA0069-AED7-4902-BF82-1E03793146A7'
 auth_str = ''
 headers['Authorization'] = auth_str
@@ -325,7 +324,7 @@ def get_world_map():
     return (get_world_map_json)
 
 
-def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply=0, fragment_multiply=0):
+def get_world_token(song_id, difficulty, select_session_uuid=str(uuid.uuid4()).upper(), stamina_multiply=0, fragment_multiply=0):
     '''
     attention:
         you must be in a map before getting token from map
@@ -337,7 +336,7 @@ def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply=0, 
         fragment_multiply: (not used (0) by default) available in legacy maps, 100=1.0x, 110=1.1x, 125=1.25x, 150=1.5x
         select_session_uuid: a uuid
     example:
-        get_map_token('fairytale', 0, str(uuid.uuid4()).upper(), 4, 150)
+        get_world_token('fairytale', 0, str(uuid.uuid4()).upper(), 4, 150)
     return:
         {
             "success": true,
@@ -349,32 +348,32 @@ def get_map_token(song_id, difficulty, select_session_uuid, stamina_multiply=0, 
         }
     '''
 
-    map_token_params = {
+    world_token_params = {
         'song_id': song_id,
         'difficulty': difficulty,
         'select_session': select_session_uuid,
     }
     if (stamina_multiply):
-        map_token_params['stamina_multiply'] = stamina_multiply
+        world_token_params['stamina_multiply'] = stamina_multiply
     if (fragment_multiply):
-        map_token_params['fragment_multiply'] = fragment_multiply
-    print(map_token_params)
+        world_token_params['fragment_multiply'] = fragment_multiply
+
     if (auth_str and ('Authorization' not in headers)):
         headers['Authorization'] = auth_str
-    map_token_url = 'https://arcapi.lowiro.com/5/score/token/world'
+    world_token_url = 'https://arcapi.lowiro.com/5/score/token/world'
 
-    map_token_response = requests.get(
-        map_token_url, headers=headers, params=map_token_params)
-    map_token_json = json.loads(map_token_response.content)
-    print(json.dumps(map_token_json, indent=4))
+    world_token_response = requests.get(
+        world_token_url, headers=headers, params=world_token_params)
+    world_token_json = json.loads(world_token_response.content)
+    print(json.dumps(world_token_json, indent=4))
 
-    return (map_token_json)
+    return (world_token_json)
 
 
 def post_score(song_token, song_hash, song_id, difficulty, score, shiny_perfect_count, perfect_count, near_count, miss_count, health, modifier, submission_hash):
     '''
     usage:
-        song_token: get it from get_map_token() or get_score_token()
+        song_token: get it from get_world_token() or get_score_token()
         song_hash: the song hash, the MD5 hex digest of aff file
         song_id: please check song_id.json
         difficulty: 0=pst, 1=prs, 2=ftr
